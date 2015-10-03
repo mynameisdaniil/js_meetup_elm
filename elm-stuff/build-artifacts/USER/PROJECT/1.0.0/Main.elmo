@@ -1,0 +1,113 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values)
+   return _elm.Main.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Main",
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Mouse = Elm.Mouse.make(_elm),
+   $Random = Elm.Random.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var randomOffset = F2(function (maxOffset,
+   time) {
+      return function () {
+         var seed = $Random.initialSeed($Basics.round(time));
+         return $Basics.fst(A2($Random.generate,
+         A2($Random.pair,
+         A2($Random.$int,
+         0 - maxOffset,
+         maxOffset),
+         A2($Random.$int,
+         0 - maxOffset,
+         maxOffset)),
+         seed));
+      }();
+   });
+   var update = F2(function (action,
+   counter) {
+      return function () {
+         switch (action.ctor)
+         {case "Click":
+            return counter + 1;
+            case "NOP": return counter;}
+         _U.badCase($moduleName,
+         "between lines 28 and 32");
+      }();
+   });
+   var NOP = {ctor: "NOP"};
+   var mailbox = $Signal.mailbox(NOP);
+   var Click = {ctor: "Click"};
+   var view = F3(function (counter,
+   _v1,
+   _v2) {
+      return function () {
+         switch (_v2.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v1.ctor)
+                 {case "_Tuple2":
+                    return A2($Html.button,
+                      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                                         ,_0: "position"
+                                                                         ,_1: "absolute"}
+                                                                        ,{ctor: "_Tuple2"
+                                                                         ,_0: "top"
+                                                                         ,_1: A2($Basics._op["++"],
+                                                                         $Basics.toString(_v1._1 + _v2._0),
+                                                                         "px")}
+                                                                        ,{ctor: "_Tuple2"
+                                                                         ,_0: "left"
+                                                                         ,_1: A2($Basics._op["++"],
+                                                                         $Basics.toString(_v1._0 + _v2._1),
+                                                                         "px")}]))
+                                   ,A2($Html$Events.onClick,
+                                   mailbox.address,
+                                   Click)]),
+                      _L.fromArray([A2($Html.h1,
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text($Basics.toString(counter))]))]));}
+                 _U.badCase($moduleName,
+                 "between lines 18 and 24");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 18 and 24");
+      }();
+   });
+   var main = function () {
+      var offset = A2($Signal._op["<~"],
+      randomOffset(10),
+      $Time.every(100));
+      var model = A3($Signal.foldp,
+      update,
+      0,
+      mailbox.signal);
+      return A2($Signal._op["~"],
+      A2($Signal._op["~"],
+      A2($Signal._op["<~"],
+      view,
+      model),
+      $Mouse.position),
+      offset);
+   }();
+   _elm.Main.values = {_op: _op
+                      ,Click: Click
+                      ,NOP: NOP
+                      ,mailbox: mailbox
+                      ,view: view
+                      ,update: update
+                      ,main: main
+                      ,randomOffset: randomOffset};
+   return _elm.Main.values;
+};
